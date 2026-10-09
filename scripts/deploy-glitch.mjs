@@ -122,12 +122,12 @@ async function run() {
       build_type: 'production',
       deployment_type: 'node',
       entry_point: 'server.js',
-      // The production server serves static assets and forwards cloud saves
-      // to the Glitch API. It keeps no authoritative save database or world
-      // simulation process on local disk. Retain the audited idle policy.
+      // Cloud saves and analytics are proxied by this server. A cold start
+      // exceeded 23 seconds in production, so keep one replica warm to
+      // avoid delaying autosaves and player progress requests.
       custom_variables: {
         capacity_model: 'serverless',
-        container_min_replicas: 0,
+        container_min_replicas: 1,
         container_max_replicas: 10
       }
     }
