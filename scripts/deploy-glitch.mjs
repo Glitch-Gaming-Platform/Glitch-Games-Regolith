@@ -121,7 +121,15 @@ async function run() {
       version_string: version,
       build_type: 'production',
       deployment_type: 'node',
-      entry_point: 'server.js'
+      entry_point: 'server.js',
+      // The production server serves static assets and forwards cloud saves
+      // to the Glitch API. It keeps no authoritative save database or world
+      // simulation process on local disk. Retain the audited idle policy.
+      custom_variables: {
+        capacity_model: 'serverless',
+        container_min_replicas: 0,
+        container_max_replicas: 10
+      }
     }
   });
   const confirmed = confirmedResponse.data || confirmedResponse;
